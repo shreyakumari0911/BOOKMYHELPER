@@ -226,7 +226,7 @@ Deployed on **Netlify**:
 → Build command: `npm run build`  
 → Publish directory: `dist`  
 
-Live URL: (add your Netlify link here after deployment)
+**🚀 Live URL**: https://bookmyhelpercleanfanatics.netlify.app/
 
 ---
 
