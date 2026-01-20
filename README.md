@@ -248,26 +248,6 @@ Deployed on **Netlify**:
 
 ---
 
-## Future Enhancements
-
-- **Backend API** – Node.js + Express for persistence
-- **Database** – PostgreSQL for bookings, providers, users
-- **Real Auth** – JWT-based authentication
-- **Provider Database** – Dynamic provider management, ratings
-- **Maps Integration** – Address validation, distance calculations
-- **Payment** – Stripe integration
-- **Notifications** – Real-time push alerts
-- **Advanced Analytics** – Provider performance metrics
-- **Multi-Language** – i18n support
-
----
-
-## License
-
-MIT
-
----
-
 ## Author
 
 Shreya Kumari  
