@@ -54,6 +54,13 @@ A full-stack booking lifecycle system for home services where customers request 
 **Decision**: useState/useCallback for simplicity; sufficient for demonstration.  
 **Trade-off**: Data lost on page reload; no scaling to multiple users.
 
+**5. Client-side persistence (localStorage)**
+- Booking data and history are persisted in `localStorage` under `bmh_state`
+- Selected role is stored in `localStorage` key `role`
+
+**Decision**: Persist locally so Customer/Provider/Admin routes share the same state without a backend.  
+**Trade-off**: Browser-only persistence; clearing storage or using another browser wipes data.
+
 ---
 
 ### Event Audit Trail
@@ -178,7 +185,7 @@ PENDING/ASSIGNED/IN_PROGRESS → CANCELLED (customer cancels)
 ## Project Structure
 
 ```
-📦 BOOKMYHELPER
+BOOKMYHELPER
 ├── App.jsx                 # Main app + state management
 ├── index.jsx              # React entry point
 ├── index.html             # HTML template
@@ -208,14 +215,14 @@ PENDING/ASSIGNED/IN_PROGRESS → CANCELLED (customer cancels)
 
 ## Key Features Implemented
 
-✅ **Booking Creation** – Customers submit requests  
-✅ **Auto-Assignment** – System assigns providers by specialty every 5s  
-✅ **Retry Logic** – Failed assignments retry up to 3 times  
-✅ **Provider Workflow** – Accept → Start → Complete  
-✅ **Failure Handling** – Rejections, cancellations, overrides  
-✅ **Role-Based UI** – Different screens for customer/provider/admin  
-✅ **Audit Trail** – Full event history with timestamps  
-✅ **System Observability** – Real-time event logs and stats  
+ **Booking Creation** – Customers submit requests  
+ **Auto-Assignment** – System assigns providers by specialty every 5s  
+ **Retry Logic** – Failed assignments retry up to 3 times  
+ **Provider Workflow** – Accept → Start → Complete  
+ **Failure Handling** – Rejections, cancellations, overrides  
+ **Role-Based UI** – Different screens for customer/provider/admin  
+ **Audit Trail** – Full event history with timestamps  
+ **System Observability** – Real-time event logs and stats  
 
 ---
 
