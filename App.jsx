@@ -19,11 +19,24 @@ const MOCK_PROVIDERS = [
   { id: 'p3', name: 'Clean Team 5', specialty: 'Cleaning', isAvailable: true },
 ];
 
-const App = () => {
-  const [viewMode, setViewMode] = useState('CUSTOMER');
-  const [bookings, setBookings] = useState([]);
+const loadPersistedState = () => {
+  try {
+    const saved = JSON.parse(localStorage.getItem('bmh_state') || '{}');
+    return {
+      bookings: Array.isArray(saved.bookings) ? saved.bookings : [],
+      globalHistory: Array.isArray(saved.globalHistory) ? saved.globalHistory : [],
+    };
+  } catch {
+    return { bookings: [], globalHistory: [] };
+  }
+};
+
+const App = ({ initialViewMode = 'CUSTOMER', lockViewMode = false }) => {
+  const persisted = loadPersistedState();
+  const [viewMode, setViewMode] = useState(initialViewMode);
+  const [bookings, setBookings] = useState(persisted.bookings);
   const [isNewBookingOpen, setIsNewBookingOpen] = useState(false);
-  const [globalHistory, setGlobalHistory] = useState([]);
+  const [globalHistory, setGlobalHistory] = useState(persisted.globalHistory);
   const [activeProvider, setActiveProvider] = useState(MOCK_PROVIDERS[0]);
 
   const getSpecialtyForService = (serviceType = '') => {
@@ -88,6 +101,14 @@ const App = () => {
 
     return () => clearInterval(interval);
   }, [bookings, autoAssignProvider]);
+
+  // Persist state when it changes
+  useEffect(() => {
+    const payload = { bookings, globalHistory };
+    try {
+      localStorage.setItem('bmh_state', JSON.stringify(payload));
+    } catch {}
+  }, [bookings, globalHistory]);
 
   const addBooking = (customerName, serviceType, address) => {
     const newBooking = {
@@ -169,26 +190,28 @@ const App = () => {
           </h1>
         </div>
 
-        <nav className="flex items-center gap-2 bg-black p-1 rounded-sm border-2 border-black">
-          <button
-            onClick={() => setViewMode('CUSTOMER')}
-            className={`px-4 py-2 font-bold uppercase transition-colors ${viewMode === 'CUSTOMER' ? 'bg-[#ffde03] text-black' : 'text-white hover:text-[#ffde03]'}`}
-          >
-            Customer
-          </button>
-          <button
-            onClick={() => setViewMode('PROVIDER')}
-            className={`px-4 py-2 font-bold uppercase transition-colors ${viewMode === 'PROVIDER' ? 'bg-[#ffde03] text-black' : 'text-white hover:text-[#ffde03]'}`}
-          >
-            Provider
-          </button>
-          <button
-            onClick={() => setViewMode('ADMIN')}
-            className={`px-4 py-2 font-bold uppercase transition-colors ${viewMode === 'ADMIN' ? 'bg-[#ffde03] text-black' : 'text-white hover:text-[#ffde03]'}`}
-          >
-            Admin
-          </button>
-        </nav>
+        {!lockViewMode && (
+          <nav className="flex items-center gap-2 bg-black p-1 rounded-sm border-2 border-black">
+            <button
+              onClick={() => setViewMode('CUSTOMER')}
+              className={`px-4 py-2 font-bold uppercase transition-colors ${viewMode === 'CUSTOMER' ? 'bg-[#ffde03] text-black' : 'text-white hover:text-[#ffde03]'}`}
+            >
+              Customer
+            </button>
+            <button
+              onClick={() => setViewMode('PROVIDER')}
+              className={`px-4 py-2 font-bold uppercase transition-colors ${viewMode === 'PROVIDER' ? 'bg-[#ffde03] text-black' : 'text-white hover:text-[#ffde03]'}`}
+            >
+              Provider
+            </button>
+            <button
+              onClick={() => setViewMode('ADMIN')}
+              className={`px-4 py-2 font-bold uppercase transition-colors ${viewMode === 'ADMIN' ? 'bg-[#ffde03] text-black' : 'text-white hover:text-[#ffde03]'}`}
+            >
+              Admin
+            </button>
+          </nav>
+        )}
       </header>
 
       <main className="container mx-auto px-4 max-w-6xl">
@@ -224,7 +247,7 @@ const App = () => {
                     onUpdateStatus={updateStatus}
                     currentUser="Customer"
                   />
-                ))
+                ))                       
               )}
             </div>
           </section>
